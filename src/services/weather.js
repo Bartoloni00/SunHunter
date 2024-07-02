@@ -1,13 +1,13 @@
+import { getDay, getHour } from "../helpers/formatDate";
 import { call } from "../helpers/http";
 
-function isLocatable()
-{
-    if (!navigator.geolocation) throw new Error('Tu navegador no soporta la geolocalizacion')
-    return
+function isLocatable() {
+    if (!navigator.geolocation) throw new Error('Tu navegador no soporta la geolocalización');
+    return;
 }
 
-function getUserLocation()
-{
+function getUserLocation() {
+    isLocatable()
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
             pos => {
@@ -21,37 +21,68 @@ function getUserLocation()
         );
     });
 }
+
 export async function starter() {
     try {
         const userLocation = await getUserLocation();
         const data = await call({ location: `${userLocation.latitude},${userLocation.longitude}` });
-        
+        // console.log(data);
+
         const dailyData = data.timelines.daily.map(day => ({
             sunriseTime: day.values.sunriseTime,
             sunsetTime: day.values.sunsetTime,
-            uvIndexMax: day.values.uvIndexMax,
-            uvIndexAvg: day.values.uvIndexAvg,
-            cloudCoverAvg: day.values.cloudCoverAvg,
-            cloudCoverMax: day.values.cloudCoverMax,
-            cloudCoverMin: day.values.cloudCoverMin,
-            evapotranspirationSum: day.values.evapotranspirationSum
+            precipitationProbabilityAvg: day.values.precipitationProbabilityAvg,
+            indexUv: {
+                Max: day.values.uvIndexMax,
+                Avg: day.values.uvIndexAvg,
+            },
+            cloudCover: {
+                Avg: day.values.cloudCoverAvg,
+                Max: day.values.cloudCoverMax,
+                Min: day.values.cloudCoverMin,
+            },
+            evapotranspirationSum: day.values.evapotranspirationSum,
+            humidity: {
+                Avg: day.values.humidityAvg,
+                Max: day.values.humidityMax,
+                Min: day.values.humidityMin,
+            },
+            temperature: {
+                Avg: day.values.temperatureAvg,
+                Max: day.values.temperatureMax,
+                Min: day.values.temperatureMin,
+            },
+            hourlyData: []
         }));
-        /**
-         * ¿cuando sale el sol - caundo se oculta? cantidad de horas de luz solar
-         * intencidad de la luz solar
-         * nubocidad
-         * temperatura maxima y minima en el dia
-         */
+
+        // data.timelines.hourly.forEach(hourData => {
+        //     const hourTime = new Date(hourData.time);
+        //     dailyData.forEach(day => {
+        //         const sunriseTime = new Date(day.sunriseTime);
+        //         const sunsetTime = new Date(day.sunsetTime);
+
+        //         if (hourTime >= sunriseTime && hourTime <= sunsetTime) {
+        //             day.hourlyData.push({
+        //                 time: hourData.time,
+        //                 precipitationProbability: hourData.values.precipitationProbability,
+        //                 uvIndex: hourData.values.uvIndex,
+        //                 cloudCover: hourData.values.cloudCover,
+        //                 humidity: hourData.values.humidity,
+        //                 temperature: hourData.values.temperature,
+        //             });
+        //         }
+        //     });
+        // });
+
         return {
             location: {
                 lat: data.location.lat,
-                lon: data.location.lon
+                lon: data.location.lon,
             },
-            sunData: dailyData
+            sunData: dailyData,
         };
     } catch (err) {
         console.error(err);
         throw err;
     }
 }
-
