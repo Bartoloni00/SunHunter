@@ -1,47 +1,45 @@
 <script setup>
+import useMessage from '../composition/useMessage.js'
 import { getDay,getHour } from './../helpers/formatDate.js'
+import DataSpan from './DataSpan.vue'
+import CardFooter from './CardFooter.vue'
 const props = defineProps({
     dayData:{
         required: true,
         type:Object
     }
 })
-const cloudCoverAvg = props.dayData.cloudCover.Avg
-let nubocidad
-if (cloudCoverAvg < 20) nubocidad = 'Despejado'
-if (cloudCoverAvg > 20 && cloudCoverAvg < 60) nubocidad = 'Un poco nublado'
-if (cloudCoverAvg > 60) nubocidad = 'Nublado'
 
-let idealDay = false
-if (cloudCoverAvg < 20 && props.dayData.indexUv.Avg < 5 && (props.dayData.evapotranspirationSum < 6 && props.dayData.evapotranspirationSum >= 2)) {
-    idealDay = true
-}
+const {message} = useMessage(props.dayData)
 </script>
 <template>
-    <article class="rounded-md p-4 flex flex-col shadow-inner shadow-primary-300 h-full">
-        <h2 class="text-xl text-center text-accent-200">Hoy</h2>
-        <ul class="flex gap-3 items-start justify-center">
-            <li class="flex flex-col items-center">
-                <span class="text-sm">Amanecer</span> 
-                <span class="text-bold">{{ getHour(dayData.sunriseTime) }}</span>
-            </li>
-            <li class="flex flex-col items-center">
-                <span class="text-sm">Atardecer</span>
-                <span class="text-bold">{{ getHour(dayData.sunsetTime) }}</span>
-            </li>
-        </ul>
-        <span class="text-xl text-center">{{ nubocidad }}</span>
-        <!--<ul class="flex gap-3 items-start justify-center">
-            <li class="flex flex-col items-center">
-                <span class="text-sm">UV maximo</span> 
-                <span class="text-bold">{{ dayData.indexUv.Max }}</span>
-            </li>
-            <li class="flex flex-col items-center">
-                <span class="text-sm">UV promedio</span>
-                <span class="text-bold">{{ dayData.indexUv.Avg }}</span>
-            </li>
-        </ul> -->
-        <span v-if="idealDay" class="m-auto text-xl text-accent-300">A la Plaza</span>
-        <span v-else class="m-auto text-xl text-buttons-200">Toma mate en casa</span>
+    <article class="rounded-md p-4 flex flex-col justify-between items-center shadow-inner shadow-primary-200 h-full bg-primary-300 w-full">
+        <h2 class="text-xl text-center text-text-200 font-black">Hoy</h2>
+        <section class="flex justify-evenly items-center gap-4 my-4">
+            <div class="h-full flex flex-col justify-between items-center w-20">
+                <img src="../assets/img/sunset.svg" alt="sunset icon" class="w-12 mr-1">
+                <DataSpan title="Hora a la que sale el sol">{{ getHour(dayData.sunriseTime) }}</DataSpan>
+            </div>
+            <div class="h-full flex flex-col justify-between items-center w-20">
+                <img src="../assets/img/sunrice.svg" alt="sun rice icon" class="w-12 mr-1">
+                <DataSpan title="Hora a la que se esconde el sol">{{ getHour(dayData.sunsetTime) }}</DataSpan>
+            </div>
+        </section>
+        <section class="flex justify-evenly items-center gap-4 my-4">
+            <div class="h-full flex flex-col justify-between items-center w-20">
+                <img src="../assets/img/rain.svg" alt="rain icon" class="w-12 mr-1">
+                <DataSpan title="Probabilidades de lluvia">{{ dayData.precipitationProbabilityAvg }} %</DataSpan>
+            </div>
+            <div class="h-full flex flex-col justify-between items-center w-20">
+                <img src="../assets/img/cloud.svg" alt="cloud icon" class="w-12 mr-1">
+                <DataSpan title="Cobertura de nubes promedio">{{ dayData.cloudCover.Avg }} %</DataSpan>
+            </div>
+        </section>
+        <section class="pt-4 flex justify-evenly items-center">
+                <DataSpan title="Temperatura maxima en el dia">{{ dayData.temperature.Max }}°C</DataSpan>
+            <img src="../assets/img/temperature.svg" alt="temperature icon">
+                <DataSpan title="Temperatura minima en el dia">{{ dayData.temperature.Min }}°C</DataSpan>
+        </section>
+       <CardFooter class="mt-4">{{ message }}</CardFooter>
     </article>
 </template>
