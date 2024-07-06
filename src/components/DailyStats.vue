@@ -1,6 +1,7 @@
 <script setup>
 import useMessage from '../composition/useMessage.js'
 import CardFooter from './CardFooter.vue'
+import DataSpan from './DataSpan.vue'
 import { getDay } from './../helpers/formatDate.js'
 const props = defineProps({
     sunData:{

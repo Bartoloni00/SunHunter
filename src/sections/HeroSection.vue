@@ -25,20 +25,18 @@ onMounted(async () => {
 </script>
 <template>
     <template v-if="loading">
-            <span class="text-5xl text-primary-200 font-black min-w-screen min-h-screen flex justify-center items-center">Cargando...</span>
-        </template>
-        <section v-else class="grid grid-cols-4 grid-rows-6 gap-2 mt-4 m-auto max-w-[870px]">
-                <TodayStats :day-data="sunData[3]" class="row-span-6"/>
-                <DailyStats :sun-data="sunData[1]" class="row-span-2"/>
-                <DailyStats :sun-data="sunData[2]" class="row-span-2"/>
-                <DailyStats :sun-data="sunData[3]" class="row-span-2"/>
-                <DailyStats :sun-data="sunData[4]" class="row-span-2 col-start-4 row-start-3"/>
-                <DailyStats :sun-data="sunData[5]" class="row-span-2 col-start-4 row-start-5"/>
-                <ChartCanva 
-                    class="col-span-2 row-span-4 col-start-2 row-start-3" 
-                    :values="sunData[1].hourly.temperature"
-                    :times="sunData[1].hourly.times"
-                    label="Temperatura en °C"
-                />
-        </section>
+        <span class="text-5xl text-primary-200 font-black min-w-screen min-h-screen flex justify-center items-center">Cargando...</span>
+    </template>
+    <section v-else class="grid grid-cols-4 grid-rows-2 gap-2 mt-4 m-auto max-w-[870px]">
+        <TodayStats :day-data="sunData[3]" class="row-span-6"/>
+        <DailyStats :sun-data="sunData[1]" class="row-span-2"/>
+        <DailyStats :sun-data="sunData[2]" class="row-span-2"/>
+        <DailyStats :sun-data="sunData[3]" class="row-span-2"/>
+        <DailyStats :sun-data="sunData[4]" class="row-span-2 col-start-4 row-start-3"/>
+        <!-- <DailyStats :sun-data="sunData[5]" class="row-span-2 col-start-4 row-start-5"/> -->
+        <ChartCanva 
+            class="col-span-2 row-span-4 col-start-2 row-start-3" 
+            :data="sunData[1].hourly"
+        />
+    </section>
 </template>

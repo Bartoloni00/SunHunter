@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +10,7 @@ import {
   Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
-
+import useChart from '../composition/useChart.js'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,42 +22,53 @@ ChartJS.register(
 )
 
 const props = defineProps({
-  values:{
-    type: Array,
-    required: true
-  },
-  times:{
-    type: Array,
-    required: true
-  },
-  label:{
-    type: String,
+  data:{
+    type: Object,
     required: true
   }
 })
 
-const chartOptions = ref({
-  responsive: true,
-  maintainAspectRatio: false
-})
-const chartData = ref({
-  labels: props.times,
-  datasets: [
-    {
-      data: props.values,
-      label: props.label,
-      backgroundColor: '#917800',
-    }
-  ]
-})
-</script>
+const {
+        temperature,
+        precipitation,
+        humidity,
+        chartOptions,
+        chartData
+    } = useChart(props.data)
 
+</script>
 <template>
-  <section class="w-full h-full shadow-inner shadow-bg-300 bg-bg-200 rounded-md flex justify-center items-center">
-    <Line
-    id="my-chart-id"
-    :options="chartOptions"
-    :data="chartData"
-  />
+  <section class="w-full h-full shadow-inner shadow-bg-300 bg-bg-200 rounded-md flex justify-center items-center flex-col">
+    <header class="w-full px-2 pt-4 pb-2">
+      <nav>
+        <ul class="flex justify-between items-center w-full text-sm text-text-100">
+          <li>
+            <button 
+              class="rounded bg-bg-300 py-1 px-2 hover:bg-bg-100 transition-all" 
+              @click="temperature"
+              >Temperatura</button>
+          </li>
+          <li>
+            <button 
+              class="rounded bg-bg-300 py-1 px-2 hover:bg-bg-100 transition-all"
+              @click="precipitation"
+              >Probabilidad de lluvia</button>
+          </li>
+          <li>
+            <button 
+              class="rounded bg-bg-300 py-1 px-2 hover:bg-bg-100 transition-all"
+              @click="humidity"
+              >Humedad</button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="w-full h-full flex justify-center items-center p-2">
+      <Line
+        id="my-chart-id"
+        :options="chartOptions"
+        :data="chartData"
+      />
+    </div>
   </section>
 </template>
