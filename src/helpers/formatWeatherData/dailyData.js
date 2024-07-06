@@ -1,6 +1,8 @@
+import { getDay } from "../formatDate.js";
+import formatHourlyData from './hourlyData.js'
 export default function formatDailyData(data)
 {
-    return data.timelines.daily.map(day => ({
+    const dailyData = data.timelines.daily.map(day => ({
         sunriseTime: day.values.sunriseTime,
         sunsetTime: day.values.sunsetTime,
         precipitationProbabilityAvg: day.values.precipitationProbabilityAvg,
@@ -23,6 +25,11 @@ export default function formatDailyData(data)
             Avg: day.values.temperatureAvg,
             Max: day.values.temperatureMax,
             Min: day.values.temperatureMin,
-        },
+        }
     }));
+
+    dailyData.forEach((day,i) => {
+        dailyData[i].hourly = formatHourlyData(data.timelines.hourly, getDay(day.sunriseTime))
+    });
+    return dailyData
 }
