@@ -8,9 +8,11 @@ import {
   Title,
   Tooltip,
   Legend
-} from 'chart.js'
-import { Line } from 'vue-chartjs'
-import useChart from '../composition/useChart.js'
+} from 'chart.js';
+import { Line } from 'vue-chartjs';
+import useChart from '../composition/useChart.js';
+import {watch} from 'vue';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -19,13 +21,13 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-)
+);
 
 const props = defineProps({
   data:{
     type: Object,
     required: true
-  }
+  },
 })
 
 const {
@@ -33,12 +35,16 @@ const {
         precipitation,
         humidity,
         chartOptions,
-        chartData
-    } = useChart(props.data)
+        chartData,
+        refreshData
+    } = useChart(props.data.hourly, props.data.sunriseTime)
 
+watch(()=>props.data, (oldData, newData)=>{
+ refreshData(oldData.hourly, oldData.sunriseTime)
+})
 </script>
 <template>
-  <section class="w-full h-full shadow-inner shadow-bg-300 bg-bg-200 rounded-md flex justify-center items-center flex-col">
+  <section class="w-full h-full shadow-inner shadow-bg-300 bg-bg-200 rounded-md flex justify-center items-center flex-col  hover:shadow-accent-100 cursor-pointer">
     <header class="w-full px-2 pt-4 pb-2">
       <nav>
         <ul class="flex justify-between items-center w-full text-sm text-text-100">

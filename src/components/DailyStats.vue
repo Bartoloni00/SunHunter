@@ -12,7 +12,7 @@ const props = defineProps({
 const {message} = useMessage(props.sunData)
 </script> 
 <template>
-    <article class="rounded-md max-w-52 p-4 flex flex-col shadow-inner shadow-bg-300 bg-bg-200">
+    <article class="rounded-md max-w-52 p-4 flex flex-col shadow-inner shadow-bg-300 bg-bg-200 hover:shadow-accent-100 cursor-pointer">
         <h2 class="text-xl text-center text-text-200 font-black">{{ getDay(sunData.sunriseTime) }}</h2>
         <section class="flex justify-evenly items-center gap-4 my-2">
             <div class="h-full flex flex-col justify-between items-center w-20">

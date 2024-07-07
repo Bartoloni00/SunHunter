@@ -27,7 +27,6 @@ export async function starter() {
         const userLocation = await getUserLocation();
         const data = await call({ location: `${userLocation.latitude},${userLocation.longitude}` });
         // const data = await call({ location: ` 43,7` });
-        console.log(data);
 
         const dailyData = formatDailyData(data)
 

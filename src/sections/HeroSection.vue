@@ -12,31 +12,36 @@ const loading = ref(true);
 onMounted(async () => {
     try {
         const res = await starter();
-        console.log('API response:', res);
         location.value = res.location;
         sunData.value = res.sunData;
     } catch (err) {
-        console.error('Error fetching data:', err);
         location.value = { lat: 'Error', lon: 'Error' };
     } finally {
         loading.value = false;
     }
 });
+
+const showChartDay = ref(0)
+
+function changeChartDay(day) {
+    if(day == showChartDay.value) return
+    showChartDay.value = day
+}
 </script>
 <template>
     <template v-if="loading">
         <span class="text-5xl text-primary-200 font-black min-w-screen min-h-screen flex justify-center items-center">Cargando...</span>
     </template>
     <section v-else class="grid grid-cols-4 grid-rows-2 gap-2 mt-4 m-auto max-w-[870px]">
-        <TodayStats :day-data="sunData[3]" class="row-span-6"/>
-        <DailyStats :sun-data="sunData[1]" class="row-span-2"/>
-        <DailyStats :sun-data="sunData[2]" class="row-span-2"/>
-        <DailyStats :sun-data="sunData[3]" class="row-span-2"/>
-        <DailyStats :sun-data="sunData[4]" class="row-span-2 col-start-4 row-start-3"/>
-        <!-- <DailyStats :sun-data="sunData[5]" class="row-span-2 col-start-4 row-start-5"/> -->
+        <TodayStats :day-data="sunData[0]" class="row-span-6" @click="changeChartDay(0)"/>
+        <DailyStats :sun-data="sunData[1]" class="row-span-2"  @click="changeChartDay(1)"/>
+        <DailyStats :sun-data="sunData[2]" class="row-span-2"  @click="changeChartDay(2)"/>
+        <DailyStats :sun-data="sunData[3]" class="row-span-2"  @click="changeChartDay(3)"/>
+        <DailyStats :sun-data="sunData[4]" class="row-span-2 col-start-4 row-start-3"  @click="changeChartDay(4)"/>
+        <!-- <DailyStats :sun-data="sunData[5]" class="row-span-2 col-start-4 row-start-5" "/> -->
         <ChartCanva 
             class="col-span-2 row-span-4 col-start-2 row-start-3" 
-            :data="sunData[1].hourly"
+            :data="sunData[showChartDay]"
         />
     </section>
 </template>
