@@ -21,7 +21,7 @@ const bgColors = computed(()=> {
   })
 </script>
 <template>
-    <footer :class="`flex justify-between items-center shadow-inner ${bgColors} p-2`">
+    <footer :class="`flex justify-between items-center shadow-inner ${bgColors} p-2 max-w-md m-auto`">
             <img src="../assets/img/mate.svg" alt="mate icon" class="w-8 mx-2"/>
             <p  class="text-text-100"><slot>Hermoso para tomar mate.</slot></p>
        </footer>

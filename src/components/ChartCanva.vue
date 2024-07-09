@@ -47,7 +47,7 @@ watch(()=>props.data, (oldData, newData)=>{
   <section class="w-full h-full shadow-inner shadow-bg-300 bg-bg-200 rounded-md flex justify-center items-center flex-col  hover:shadow-accent-100 cursor-pointer">
     <header class="w-full px-2 pt-4 pb-2">
       <nav>
-        <ul class="flex justify-between items-center w-full text-sm text-text-100">
+        <ul class="flex justify-center gap-4 items-center w-full text-sm text-text-100 flex-wrap-reverse">
           <li>
             <button 
               class="rounded bg-bg-300 py-1 px-2 hover:bg-bg-100 transition-all" 
